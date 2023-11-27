@@ -5,7 +5,6 @@ module VCAP::CloudController
     STAGING_LOG_SOURCE               = 'STG'.freeze
     STAGING_DEFAULT_LANG             = 'en_US.UTF-8'.freeze
     STAGING_RESULT_FILE              = '/tmp/result.json'.freeze
-    STAGING_TASK_CPU_WEIGHT          = 50
 
     LEGACY_DOWNLOAD_USER = 'vcap'.freeze
 

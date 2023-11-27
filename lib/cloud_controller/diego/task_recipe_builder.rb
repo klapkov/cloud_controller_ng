@@ -4,7 +4,6 @@ require 'cloud_controller/diego/buildpack/task_action_builder'
 require 'cloud_controller/diego/docker/task_action_builder'
 require 'cloud_controller/diego/bbs_environment_builder'
 require 'cloud_controller/diego/task_completion_callback_generator'
-require 'cloud_controller/diego/task_cpu_weight_calculator'
 
 module VCAP::CloudController
   module Diego
@@ -22,7 +21,6 @@ module VCAP::CloudController
 
         ::Diego::Bbs::Models::TaskDefinition.new({
           completion_callback_url:          task_completion_callback,
-          cpu_weight:                       cpu_weight(task),
           disk_mb:                          task.disk_in_mb,
           egress_rules:                     @egress_rules.running_protobuf_rules(task.app),
           log_guid:                         task.app_guid,
@@ -59,7 +57,6 @@ module VCAP::CloudController
 
         ::Diego::Bbs::Models::TaskDefinition.new({
           completion_callback_url:          staging_completion_callback(config, staging_details),
-          cpu_weight:                       STAGING_TASK_CPU_WEIGHT,
           disk_mb:                          staging_details.staging_disk_in_mb,
           egress_rules:                     @egress_rules.staging_protobuf_rules(app_guid: staging_details.package.app_guid),
           log_guid:                         staging_details.package.app_guid,
@@ -99,10 +96,6 @@ module VCAP::CloudController
         host_port = "#{config.get(:internal_service_hostname)}:#{port}"
         path      = "/internal/v3/staging/#{staging_details.staging_guid}/build_completed?start=#{staging_details.start_after_staging}"
         "#{scheme}://#{host_port}#{path}"
-      end
-
-      def cpu_weight(task)
-        TaskCpuWeightCalculator.new(memory_in_mb: task.memory_in_mb).calculate
       end
 
       def generate_network(task, container_workload)

@@ -83,7 +83,6 @@ module VCAP::CloudController
           legacy_download_user:             desired_lrp_builder.action_user,
           trusted_system_certificates_path: RUNNING_TRUSTED_SYSTEM_CERT_PATH,
           network:                          generate_network,
-          cpu_weight:                       TaskCpuWeightCalculator.new(memory_in_mb: process.memory).calculate,
           action:                           MainLRPActionBuilder.build(process, desired_lrp_builder, ssh_key),
           monitor:                          generate_monitor_action(desired_lrp_builder),
           root_fs:                          desired_lrp_builder.root_fs,
